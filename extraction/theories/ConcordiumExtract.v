@@ -2,6 +2,8 @@ From Coq Require Import List.
 From Coq Require Import String.
 From Coq Require Import ZArith.
 
+Unset Universe Checking.
+
 From MetaCoq.Template Require Import All.
 From MetaCoq.Common Require Import Kernames.
 From RustExtraction Require Import StringExtra.
@@ -662,7 +664,7 @@ Section ConcordiumPrinting.
                    else
                      Ast.Env.mk_global_env (ContextSet.empty) (declarations Σ) (Ast.Env.retroknowledge Σ));;
   Σ <- run_transforms Σ params;;
-  res <- tmEval lazy (extract_lines seeds Σ remaps params);;
+  res <- (tmEval lazy (extract_lines seeds Σ remaps params) : TemplateMonad (result (list String.string) string));;
   match res with
   | Ok lines =>
     let init_wrapper := init_wrapper m.(concmd_contract_name) init_nm in

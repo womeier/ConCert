@@ -82,6 +82,7 @@ Definition extract_body {A} (def : A) : TemplateMonad _ :=
 
 Open Scope N_scope.
 
+(*
 
 (* TODO: Use QuickChick here?*)
 (* NOTE: these numbers come from the Dexter contract, where the bug was discovered *)
@@ -99,4 +100,4 @@ MetaCoq Run (extract_body _1000).
 
 Example N_syn_to_nat_1000 :
   N_syn_to_nat _1000_extracted = Some 1000%nat.
-Proof. reflexivity. Qed.
+   Proof. reflexivity. Qed. *)

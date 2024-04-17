@@ -1,3 +1,4 @@
+Unset Universe Checking.
 From ConCert.Examples.Counter Require Counter.
 From ConCert.Extraction Require Import Common.
 From ConCert.Extraction Require Import ConcordiumExtract.

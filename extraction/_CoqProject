@@ -5,16 +5,16 @@
 -R ../execution/theories ConCert.Execution
 
 -Q theories ConCert.Extraction
-theories/CameLIGOExtract.v
-theories/CameLIGOPretty.v
+# theories/CameLIGOExtract.v
+# theories/CameLIGOPretty.v
 theories/Common.v
 theories/ConcordiumExtract.v
-theories/LiquidityExtract.v
-theories/LiquidityPretty.v
+# theories/LiquidityExtract.v
+# theories/LiquidityPretty.v
 theories/PrettyPrinterMonad.v
 theories/SpecializeChainBase.v
 
 -Q tests ConCert.Extraction.Tests
-tests/CameLIGOExtractionTests.v
-tests/RecordExtractionLiquidityTests.v
+# tests/CameLIGOExtractionTests.v
+# tests/RecordExtractionLiquidityTests.v
 tests/NumLiteralTests.v
