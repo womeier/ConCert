@@ -11,4 +11,4 @@ bumpalo = "3.5.0"
 concert-std-derive = { path = "../concert-std-derive" }
 immutable-map = "0.1.2"
 
-concordium-std = { path = "/home/wolfgang/concordium-rust-smart-contracts/concordium-std", default-features = false }
+concordium-std = { path = "/home/wolfgang/ProjectsUni/Compilerstep/smart_contracts/concordium-rust-smart-contracts/concordium-std", default-features = false }
