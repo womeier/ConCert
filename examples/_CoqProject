@@ -17,4 +17,5 @@ counter/embedding/CounterEmbed.v
 # counter/extraction/CounterSubsetTypesLiquidity.v
 # counter/extraction/CounterRefTypesMidlang.v
 counter/extraction/CounterRust.v
+counter/extraction/CounterConcordiumWasm.v
 # counter/extraction/CounterLIGO.v
