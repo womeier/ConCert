@@ -2,6 +2,7 @@ Unset Universe Checking.
 From ConCert.Examples.Counter Require Counter.
 From ConCert.Extraction Require Import Common.
 From ConCert.Extraction Require Import ConcordiumExtract.
+From ConCert.Extraction Require Import SpecializeChainBase.
 From RustExtraction Require Import RustExtract.
 From Coq Require Import Bool.
 From Coq Require Import String.

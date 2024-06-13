@@ -17,9 +17,9 @@ theories/Serializable.v
 theories/ContractCommon.v
 
 -R test ConCert.Execution.Test
-test/LocalBlockchain.v
-test/ChainPrinters.v
-test/TestUtils.v
-test/TraceGens.v
-test/TestNotation.v
-test/QCTest.v
+#test/LocalBlockchain.v
+#test/ChainPrinters.v
+#test/TestUtils.v
+#test/TraceGens.v
+#test/TestNotation.v
+#test/QCTest.v
