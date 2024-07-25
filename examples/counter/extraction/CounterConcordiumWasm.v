@@ -5,7 +5,7 @@ From ConCert.Extraction Require Import ConcordiumExtract.
 From Coq Require Import List Uint63 ZArith Bool String.
 From MetaCoq.Template Require Import All.
 
-From ConCert.Execution Require Import Blockchain BoundedN.
+From ConCert.Execution Require Import Blockchain BoundedN Serializable LocalBlockchain.
 Import ssreflect.
 
 (* Extraction of the counter contract to Wasm (for Concordium) via CertiCoq-Wasm.
@@ -25,18 +25,17 @@ Import ssreflect.
 
 
 Definition AddrSize : N := (2^8)%N.
-Lemma addr_serializable : Serializable.Serializable (BoundedN AddrSize).
-(* typeclasses eauto. *)
-Admitted.
 
-#[local]
-Instance LocalChainBase : ChainBase :=
+Check (@BoundedN.eqb AddrSize).
+
+(* #[local]
+Definition LocalChainBase : ChainBase :=
   {| Address := BoundedN AddrSize;
      address_eqb := BoundedN.eqb;
      address_eqb_spec := BoundedN.eqb_spec;
      address_is_contract a := (AddrSize / 2 <=? BoundedN.to_N a)%N;
-     address_serializable := addr_serializable
-   |}.
+   |}. *)
+
 
 Record ConcordiumWasmMod (init_type receive_type : Type) (state : Type) :=
 { concwmd_init : init_type;
@@ -48,10 +47,14 @@ Record ConcordiumWasmMod (init_type receive_type : Type) (state : Type) :=
 Definition zero : BoundedN AddrSize. apply bounded with (n := 0%N). reflexivity.
 Defined.
 
+#[global]
+Instance LocalChainBase : ChainBase := LocalBlockchain.LocalChainBase AddrSize.
+
 Definition encode_counter (s : Counter.State) : Uint63.int :=
   match s with
   | {| Counter.count := count; Counter.owner := _ |} => Uint63.of_Z count
   end.
+About encode_counter. Check encode_counter. Print encode_counter.
 
 Definition COUNTER_MODULE : ConcordiumWasmMod _ _ Counter.State :=
   {| concwmd_init := @ConCert.Examples.Counter.Counter.counter_init LocalChainBase;
@@ -60,7 +63,8 @@ Definition COUNTER_MODULE : ConcordiumWasmMod _ _ Counter.State :=
      concwmd_decode_state := fun p => Counter.build_state (Uint63.to_Z p) zero
    |}.
 
-Check @COUNTER_MODULE.
+(* Check @COUNTER_MODULE. *)
+(* Print Assumptions COUNTER_MODULE. *)
 
 From CertiCoq.Plugin Require Import CertiCoq.
 CertiCoq Compile Wasm -debug COUNTER_MODULE.

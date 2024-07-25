@@ -82,7 +82,7 @@ Module BoundedN.
       auto.
     - constructor.
       intros H; rewrite H in neq; tauto.
-  Qed.
+  Defined.
 
   Lemma eqb_refl {bound : N} (n : BoundedN bound) :
     eqb n n = true.
@@ -204,7 +204,7 @@ Module BoundedN.
     Proof.
       intros x y.
       destruct (BoundedN.eqb_spec x y); [left|right]; assumption.
-    Qed.
+    Defined.
 
     Global Instance BoundedNEqDec {bound : N} : EqDecision (BoundedN bound) :=
       eq_dec.
