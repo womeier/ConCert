@@ -23,10 +23,7 @@ Import ssreflect.
    - encode Chain (currently we pass a dummy value as the counter doesn't use it)
 *)
 
-
 Definition AddrSize : N := (2^8)%N.
-
-Check (@BoundedN.eqb AddrSize).
 
 (* #[local]
 Definition LocalChainBase : ChainBase :=
@@ -36,12 +33,12 @@ Definition LocalChainBase : ChainBase :=
      address_is_contract a := (AddrSize / 2 <=? BoundedN.to_N a)%N;
    |}. *)
 
-
 Record ConcordiumWasmMod (init_type receive_type : Type) (state : Type) :=
 { concwmd_init : init_type;
   concwmd_receive : receive_type;
   concwmd_encode_state : state -> Uint63.int;
-  concwmd_decode_state : Uint63.int -> state
+  concwmd_decode_state : Uint63.int -> state;
+  concwmd_make_msg : Uint63.int -> Counter.Msg
 }.
 
 Definition zero : BoundedN AddrSize. apply bounded with (n := 0%N). reflexivity.
@@ -54,13 +51,19 @@ Definition encode_counter (s : Counter.State) : Uint63.int :=
   match s with
   | {| Counter.count := count; Counter.owner := _ |} => Uint63.of_Z count
   end.
-About encode_counter. Check encode_counter. Print encode_counter.
+
+Definition make_msg (p : Uint63.int) : Counter.Msg :=
+  let z := Uint63.to_Z p in
+  if (z <? 0)%Z then Counter.Dec (-z)
+                else Counter.Inc z.
+
 
 Definition COUNTER_MODULE : ConcordiumWasmMod _ _ Counter.State :=
   {| concwmd_init := @ConCert.Examples.Counter.Counter.counter_init LocalChainBase;
      concwmd_receive := @ConCert.Examples.Counter.Counter.counter_receive LocalChainBase;
      concwmd_encode_state := encode_counter;
-     concwmd_decode_state := fun p => Counter.build_state (Uint63.to_Z p) zero
+     concwmd_decode_state := fun p => Counter.build_state (Uint63.to_Z p) zero;
+     concwmd_make_msg := make_msg
    |}.
 
 (* Check @COUNTER_MODULE. *)
