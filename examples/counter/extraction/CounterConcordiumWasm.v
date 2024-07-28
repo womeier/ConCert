@@ -38,7 +38,8 @@ Record ConcordiumWasmMod (init_type receive_type : Type) (state : Type) :=
   concwmd_receive : receive_type;
   concwmd_encode_state : state -> Uint63.int;
   concwmd_decode_state : Uint63.int -> state;
-  concwmd_make_msg : Uint63.int -> Counter.Msg
+  concwmd_make_msg : Uint63.int -> option Counter.Msg;
+  concwmd_i63_to_Z : Uint63.int -> Z
 }.
 
 Definition zero : BoundedN AddrSize. apply bounded with (n := 0%N). reflexivity.
@@ -52,10 +53,10 @@ Definition encode_counter (s : Counter.State) : Uint63.int :=
   | {| Counter.count := count; Counter.owner := _ |} => Uint63.of_Z count
   end.
 
-Definition make_msg (p : Uint63.int) : Counter.Msg :=
+Definition make_msg (p : Uint63.int) : option Counter.Msg :=
   let z := Uint63.to_Z p in
-  if (z <? 0)%Z then Counter.Dec (-z)
-                else Counter.Inc z.
+  if (z <? 0)%Z then Some (Counter.Dec (-z))
+                else Some (Counter.Inc z).
 
 
 Definition COUNTER_MODULE : ConcordiumWasmMod _ _ Counter.State :=
@@ -63,7 +64,8 @@ Definition COUNTER_MODULE : ConcordiumWasmMod _ _ Counter.State :=
      concwmd_receive := @ConCert.Examples.Counter.Counter.counter_receive LocalChainBase;
      concwmd_encode_state := encode_counter;
      concwmd_decode_state := fun p => Counter.build_state (Uint63.to_Z p) zero;
-     concwmd_make_msg := make_msg
+     concwmd_make_msg := make_msg;
+     concwmd_i63_to_Z := Uint63.to_Z
    |}.
 
 (* Check @COUNTER_MODULE. *)
